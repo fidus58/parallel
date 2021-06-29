@@ -12,12 +12,7 @@
 #include <atomic>
 #include <chrono>
 
-std::mutex mut;
-
 std::atomic<int> atomic_count;
-int non_atomic_count;
-
-std::atomic_flag lock = ATOMIC_FLAG_INIT;
 
 int main()
 {
@@ -26,19 +21,13 @@ int main()
     
     std::thread up   ([](){
                            for (int i=0; i<10'000'000;++i) {
-                             //std::lock_guard<std::mutex> lock(mut);
-                             //while(lock.test_and_set(std::memory_order_acquire));
-                             non_atomic_count++;
-                             //lock.clear(std::memory_order_release);
+                             atomic_count++;
                            }
                      });
     
     std::thread down ([](){
                            for (int i=0; i<10'000'000;++i) {
-                             //std::lock_guard<std::mutex> lock(mut);
-                             //while(lock.test_and_set(std::memory_order_acquire));
-                             non_atomic_count--;
-                             //lock.clear(std::memory_order_release);
+                             atomic_count--;
                            }
                      });
     
@@ -47,6 +36,6 @@ int main()
     int elapsed_millis = std::chrono::duration_cast<std::chrono::milliseconds>
     (end-start).count();
     std::cout << "elapsed time: " << elapsed_millis/1000.0 << "s\n";
-    std::cout << non_atomic_count <<std::endl;
+    std::cout << atomic_count <<std::endl;
 }
 
