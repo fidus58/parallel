@@ -26,7 +26,7 @@ int main()
     
     std::thread up   ([](){
                            for (int i=0; i<10'000'000;++i) {
-                             //std::lock_guard<std::mutex> lock(mut);
+                             std::lock_guard<std::mutex> lock(mut);
                              //while(lock.test_and_set(std::memory_order_acquire));
                              non_atomic_count++;
                              //lock.clear(std::memory_order_release);
@@ -35,7 +35,7 @@ int main()
     
     std::thread down ([](){
                            for (int i=0; i<10'000'000;++i) {
-                             //std::lock_guard<std::mutex> lock(mut);
+                             std::lock_guard<std::mutex> lock(mut);
                              //while(lock.test_and_set(std::memory_order_acquire));
                              non_atomic_count--;
                              //lock.clear(std::memory_order_release);
