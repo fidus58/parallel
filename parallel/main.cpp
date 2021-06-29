@@ -26,17 +26,17 @@ int main()
     
     std::thread up   ([](){
                            for (int i=0; i<10'000'000;++i) {
-                               while(lock.test_and_set());
+                               while(lock.test_and_set(std::memory_order_acquire));
                                non_atomic_count++;
-                               lock.clear();
+                               lock.clear(std::memory_order_release);
                            }
                      });
     
     std::thread down ([](){
                            for (int i=0; i<10'000'000;++i) {
-                               while(lock.test_and_set());
+                               while(lock.test_and_set(std::memory_order_acquire));
                                non_atomic_count--;
-                               lock.clear();
+                               lock.clear(std::memory_order_release);
                            }
                      });
     
